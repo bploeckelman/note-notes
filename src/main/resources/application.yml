@@ -1,0 +1,27 @@
+spring:
+  data:
+    rest:
+      base-path: /api
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/note_notes
+    username: note_notes_user
+    password: note_notes_pass
+
+  jpa:
+    hibernate:
+#      ddl-auto: create
+      ddl-auto: none
+
+  flyway:
+#    enabled: false
+    enabled: true
+
+server:
+  compression:
+    enabled: true
+  # for testing
+#  error:
+#    include-exception: true
+#    include-message: always
+#    include-binding-errors: always

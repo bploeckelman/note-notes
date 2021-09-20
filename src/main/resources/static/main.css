@@ -1,0 +1,11 @@
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    background-color: rgb(48, 48, 48);
+    color: rgb(128, 128, 128);
+    display: table-cell;
+    vertical-align: middle;
+}

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 import client from './api/client';
 import NoteCard from './note-card';
@@ -38,15 +40,17 @@ class App extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Users</h1>
-                <UserList users={this.state.users}
-                          links={this.state.links}
-                          pageSize={this.state.pageSize}
-                          onNavigate={this.onNavigate}
-                />
-                <NoteCard/>
-            </div>
+            <Container className='p-3'>
+                <Jumbotron>
+                    {/*<h1>Users</h1>*/}
+                    {/*<UserList users={this.state.users}*/}
+                    {/*          links={this.state.links}*/}
+                    {/*          pageSize={this.state.pageSize}*/}
+                    {/*          onNavigate={this.onNavigate}*/}
+                    {/*/>*/}
+                    <NoteCard/>
+                </Jumbotron>
+            </Container>
         )
     }
 

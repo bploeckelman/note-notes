@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import Vex from 'vexflow';
 
 import client from './api/client';
+import NoteCard from './note-card';
 
 class App extends Component {
 
@@ -19,49 +19,6 @@ class App extends Component {
 
     componentDidMount() {
         this.onNavigate().then(() => {});
-        this.vexflow = new Vex.Flow.Factory({
-            renderer: {
-                elementId: 'music_canvas',
-                backend: Vex.Flow.Renderer.Backends.SVG,
-                width: 450,
-                height: 250
-            },
-        });
-        this.score = this.vexflow.EasyScore();
-        this.system = this.vexflow.System();
-
-        this.setupStaves();
-        this.redraw();
-    }
-
-    setupStaves() {
-        let system = this.system;
-        let score = this.score;
-
-        system
-            .addStave({
-                voices: [
-                    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
-                    score.voice(score.notes('C#4/h, C#4', {stem: 'down'}))
-                ]
-            })
-            .addClef('treble')
-            .addTimeSignature('4/4');
-
-        system
-            .addStave({
-                voices: [
-                    score.voice(score.notes('A4/q, B4, C5, D5', {stem: 'up'}))
-                ]
-            })
-            .addClef('bass')
-            .addTimeSignature('4/4');
-
-        system.addConnector();
-    }
-
-    redraw() {
-        this.vexflow.draw();
     }
 
     async onNavigate(href) {
@@ -88,14 +45,7 @@ class App extends Component {
                           pageSize={this.state.pageSize}
                           onNavigate={this.onNavigate}
                 />
-                <div id='music_canvas'
-                     style={{
-                         backgroundColor: 'linen',
-                         borderRadius: '15px',
-                         width: '500px',
-                         height: '250px'
-                     }}
-                />
+                <NoteCard/>
             </div>
         )
     }

@@ -19,3 +19,9 @@ insert into note_notes.user (name) values
     ('Torches'),
     ('Mandibles')
 ;
+
+insert into note_notes.notation (description) values
+    ('C'), ('D'), ('E'), ('F'), ('G'), ('A'), ('B'),
+    ('C#'), ('D#'), ('E#'), ('F#'), ('G#'), ('A#'), ('B#'),
+    ('Cb'), ('Db'), ('Eb'), ('Fb'), ('Gb'), ('Ab'), ('Bb')
+;

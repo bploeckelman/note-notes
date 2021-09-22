@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
+import Button from 'react-bootstrap/Button';
 
 import client from './api/client';
 import NoteCard from './note-card';
@@ -11,12 +12,16 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            notation: {},
+            notations: [],
             users: [],
             pageSize: 2,
             pageNum: 0,
-            links: {}
+            links: {},
+            showNoteCard: false
         };
         this.onNavigate = this.onNavigate.bind(this);
+        this.onNotationClick = this.onNotationClick.bind(this);
     }
 
     componentDidMount() {
@@ -27,10 +32,18 @@ class App extends Component {
         try {
             let results = /page=(\d+)/g.exec(href);
             let pageNum = (results) ? results[1] : 0;
-            const data = await client.getData('/users', pageNum, this.state.pageSize);
+
+            const notations_data = await client.getData('/notations');
+            let notations = notations_data._embedded.notations;
+
+            const user_data = await client.getData('/users', pageNum, this.state.pageSize);
+            let users = user_data._embedded.users;
+            let links = user_data._links;
+
             this.setState({
-                users: data._embedded.users,
-                links: data._links,
+                notations: notations,
+                users: users,
+                links: links,
                 pageNum: pageNum
             });
         } catch (err) {
@@ -38,7 +51,35 @@ class App extends Component {
         }
     }
 
+    onNotationClick(event, target) {
+        event.preventDefault();
+        this.setState({
+            notation: target
+        });
+    }
+
     render() {
+        let notations = this.state.notations.map(notation =>
+            <li>
+                <Button href='#'
+                        key={notation._links.self.href}
+                        onClick={() => {
+                            this.setState({
+                                notation: notation,
+                                showNoteCard: true
+                            });
+                        }}
+                >
+                    {notation.description}
+                </Button>
+                {
+                    (this.state.notation === notation) &&
+                    <NoteCard key={'notecard_'+notation._links.self.href}
+                              notation={this.state.notation}
+                    />
+                }
+            </li>
+        );
         return (
             <Container className='p-3'>
                 <Jumbotron>
@@ -48,7 +89,7 @@ class App extends Component {
                     {/*          pageSize={this.state.pageSize}*/}
                     {/*          onNavigate={this.onNavigate}*/}
                     {/*/>*/}
-                    <NoteCard/>
+                    <ul>{notations}</ul>
                 </Jumbotron>
             </Container>
         )

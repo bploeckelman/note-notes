@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import Vex from "vexflow";
 
-const width = 520;
-const height = 160;
+const width = 200;
+const height = 150;
 
 export default class NoteCard extends Component {
 
@@ -22,22 +22,10 @@ export default class NoteCard extends Component {
         let score = vexflow.EasyScore();
         let system = vexflow.System();
 
-        let notes = 'G3/8, C4, E4';
-
+        let notes = this.props.notation.description + '4/w';
         system.addStave({
-            voices: [
-                score.voice(
-                    score.tuplet(score.beam(score.notes(notes)))
-                        .concat(score.tuplet(score.beam(score.notes(notes))))
-                        .concat(score.tuplet(score.beam(score.notes(notes))))
-                        .concat(score.tuplet(score.beam(score.notes(notes))))
-                )
-            ]
-        })
-        .addClef('treble')
-        .addKeySignature('E')
-        ;
-
+            voices: [score.voice(score.notes(notes))]
+        }).addClef('treble');
         vexflow.draw();
     }
 

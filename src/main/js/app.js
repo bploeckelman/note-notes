@@ -60,9 +60,8 @@ class App extends Component {
 
     render() {
         let notations = this.state.notations.map(notation =>
-            <li>
+            <li key={notation._links.self.href}>
                 <Button href='#'
-                        key={notation._links.self.href}
                         onClick={() => {
                             this.setState({
                                 notation: notation,
@@ -74,9 +73,7 @@ class App extends Component {
                 </Button>
                 {
                     (this.state.notation === notation) &&
-                    <NoteCard key={'notecard_'+notation._links.self.href}
-                              notation={this.state.notation}
-                    />
+                    <NoteCard notation={this.state.notation}/>
                 }
             </li>
         );

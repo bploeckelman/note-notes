@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
@@ -6,93 +6,129 @@ import Button from 'react-bootstrap/Button';
 
 import client from './api/client';
 import NoteCard from './note-card';
+import {Card} from "react-bootstrap";
 
-class App extends Component {
+function App() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            notation: {},
-            notations: [],
-            users: [],
-            pageSize: 2,
-            pageNum: 0,
-            links: {},
-            showNoteCard: false
-        };
-        this.onNavigate = this.onNavigate.bind(this);
-        this.onNotationClick = this.onNotationClick.bind(this);
-    }
+    const [questions, setQuestions] = useState([]);
 
-    componentDidMount() {
-        this.onNavigate().then(() => {});
-    }
-
-    async onNavigate(href) {
-        try {
-            let results = /page=(\d+)/g.exec(href);
-            let pageNum = (results) ? results[1] : 0;
-
-            const notations_data = await client.getData('/notations');
-            let notations = notations_data._embedded.notations;
-
-            const user_data = await client.getData('/users', pageNum, this.state.pageSize);
-            let users = user_data._embedded.users;
-            let links = user_data._links;
-
-            this.setState({
-                notations: notations,
-                users: users,
-                links: links,
-                pageNum: pageNum
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    onNotationClick(event, target) {
-        event.preventDefault();
-        this.setState({
-            notation: target
-        });
-    }
-
-    render() {
-        let notations = this.state.notations.map(notation =>
-            <li key={notation._links.self.href}>
-                <Button href='#'
-                        onClick={() => {
-                            this.setState({
-                                notation: notation,
-                                showNoteCard: true
-                            });
-                        }}
-                >
-                    {notation.description}
-                </Button>
-                {
-                    (this.state.notation === notation) &&
-                    <NoteCard notation={this.state.notation}/>
-                }
-            </li>
+    const loadQuestions = async () => {
+        const notations_data = await client.getData('/notations');
+        let notations = notations_data._embedded.notations;
+        let q = notations.map(notation =>
+            <p key={notation._links.self.href}>
+                {notation.description}
+            </p>
         );
-        return (
-            <Container className='p-3'>
-                <Jumbotron>
-                    {/*<h1>Users</h1>*/}
-                    {/*<UserList users={this.state.users}*/}
-                    {/*          links={this.state.links}*/}
-                    {/*          pageSize={this.state.pageSize}*/}
-                    {/*          onNavigate={this.onNavigate}*/}
-                    {/*/>*/}
-                    <ul>{notations}</ul>
-                </Jumbotron>
-            </Container>
-        )
+        setQuestions(q);
     }
+
+    let content;
+    if (questions.length > 0) {
+        content = <div>{questions}</div>;
+    } else {
+        content =
+            <Card>
+                <p>no questions</p>
+                <p><Button onClick={loadQuestions}>load questions</Button></p>
+            </Card>
+    }
+    return (
+        <Container className='p-3'>
+            <Jumbotron>
+                {content}
+            </Jumbotron>
+        </Container>
+    );
 
 }
+
+// class App extends Component {
+//
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             notation: {},
+//             notations: [],
+//             users: [],
+//             pageSize: 2,
+//             pageNum: 0,
+//             links: {},
+//             showNoteCard: false
+//         };
+//         this.onNavigate = this.onNavigate.bind(this);
+//         this.onNotationClick = this.onNotationClick.bind(this);
+//     }
+//
+//     componentDidMount() {
+//         this.onNavigate().then(() => {});
+//     }
+//
+//     async onNavigate(href) {
+//         try {
+//             let results = /page=(\d+)/g.exec(href);
+//             let pageNum = (results) ? results[1] : 0;
+//
+//             const notations_data = await client.getData('/notations');
+//             let notations = notations_data._embedded.notations;
+//
+//             const user_data = await client.getData('/users', pageNum, this.state.pageSize);
+//             let users = user_data._embedded.users;
+//             let links = user_data._links;
+//
+//             this.setState({
+//                 notations: notations,
+//                 users: users,
+//                 links: links,
+//                 pageNum: pageNum
+//             });
+//         } catch (err) {
+//             console.error(err);
+//         }
+//     }
+//
+//     onNotationClick(event, target) {
+//         event.preventDefault();
+//         this.setState({
+//             notation: target
+//         });
+//     }
+//
+//     render() {
+//         let notations = this.state.notations.map(notation =>
+//             <li key={notation._links.self.href}>
+//                 <Button href='#'
+//                         onClick={() => {
+//                             this.setState({
+//                                 notation: notation,
+//                                 showNoteCard: true
+//                             });
+//                         }}
+//                 >
+//                     {notation.description}
+//                 </Button>
+//                 {
+//                     (this.state.notation === notation) &&
+//                     <NoteCard notation={this.state.notation}/>
+//                 }
+//             </li>
+//         );
+//         return (
+//             <Container className='p-3'>
+//                 <Jumbotron>
+//                     {/*<h1>Users</h1>*/}
+//                     {/*<UserList users={this.state.users}*/}
+//                     {/*          links={this.state.links}*/}
+//                     {/*          pageSize={this.state.pageSize}*/}
+//                     {/*          onNavigate={this.onNavigate}*/}
+//                     {/*/>*/}
+//                     <ul>{notations}</ul>
+//                 </Jumbotron>
+//             </Container>
+//         )
+//     }
+//
+// }
 
 const Nav = { first: 'first', prev: 'prev', next: 'next', last: 'last' };
 

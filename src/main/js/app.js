@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Card from "react-bootstrap/Card";

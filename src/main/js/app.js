@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Card from "react-bootstrap/Card";
@@ -56,24 +56,28 @@ function Question(props) {
 
     let width = 200;
     let height = 150;
+
     let self = props.notation._links.self.href;
     let id = 'music_canvas_' + self.substring(self.lastIndexOf('\/') + 1);
-    let vexflow = new Vex.Flow.Factory({
-        renderer: {
-            elementId: id,
-            backend: Vex.Flow.Renderer.Backends.SVG,
-            width: width,
-            height: height
-        },
-    });
-    let score = vexflow.EasyScore();
-    let system = vexflow.System();
 
-    let notes = props.notation.description + '4/w';
-    system.addStave({
-        voices: [score.voice(score.notes(notes))]
-    }).addClef('treble');
-    vexflow.draw();
+    useEffect(() => {
+        let vexflow = new Vex.Flow.Factory({
+            renderer: {
+                elementId: id,
+                backend: Vex.Flow.Renderer.Backends.SVG,
+                width: width,
+                height: height
+            },
+        });
+        let score = vexflow.EasyScore();
+        let system = vexflow.System();
+
+        let notes = props.notation.description + '4/w';
+        system.addStave({
+            voices: [score.voice(score.notes(notes))]
+        }).addClef('treble');
+        vexflow.draw();
+    });
 
     return (
         <div id={id}

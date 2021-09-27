@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Card from "react-bootstrap/Card";
 import Button from 'react-bootstrap/Button';
+import Vex from "vexflow";
 
 import client from './api/client';
 
@@ -29,7 +30,9 @@ function Quiz() {
         const data = await client.getData('/notations');
         let notations = data._embedded.notations;
         setQuestions(notations.map(n =>
-            <span key={n._links.self.href}>{n.description} </span>
+            <div key={n._links.self.href}>
+                <Question notation={n}/>
+            </div>
         ));
     };
 
@@ -45,6 +48,42 @@ function Quiz() {
 
     return (
         <>{content}</>
+    );
+
+}
+
+function Question(props) {
+
+    let width = 200;
+    let height = 150;
+    let self = props.notation._links.self.href;
+    let id = 'music_canvas_' + self.substring(self.lastIndexOf('\/') + 1);
+    let vexflow = new Vex.Flow.Factory({
+        renderer: {
+            elementId: id,
+            backend: Vex.Flow.Renderer.Backends.SVG,
+            width: width,
+            height: height
+        },
+    });
+    let score = vexflow.EasyScore();
+    let system = vexflow.System();
+
+    let notes = props.notation.description + '4/w';
+    system.addStave({
+        voices: [score.voice(score.notes(notes))]
+    }).addClef('treble');
+    vexflow.draw();
+
+    return (
+        <div id={id}
+             style={{
+                 backgroundColor: 'linen',
+                 borderRadius: '15px',
+                 width: width+'px',
+                 height: height+'px'
+             }}
+        />
     );
 
 }

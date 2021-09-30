@@ -25,6 +25,7 @@ function App() {
 function Quiz() {
 
     const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
 
     const loadQuestions = async () => {
         const data = await client.getData('/notations');
@@ -37,7 +38,7 @@ function Quiz() {
     };
 
     let content = (questions.length > 0)
-        ? <div>{questions}</div>
+        ? <div>{questions[currentQuestion]}</div>
         : <Card body className={'position-relative'} style={{ width: '18rem', height: '8rem' }}>
             <Button className={'position-absolute top-50 start-50 translate-middle'}
                     style={{ width: '17rem', height: '7rem' }}

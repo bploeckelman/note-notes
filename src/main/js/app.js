@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import Container from 'react-bootstrap/Container';
 import Card from "react-bootstrap/Card";
 import Button from 'react-bootstrap/Button';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Vex from "vexflow";
 
 import client from './api/client';
@@ -10,13 +12,17 @@ import client from './api/client';
 function App() {
 
     return (
-        <Container>
-            <div className={'p-5 mb-4 bg-dark rounded-3'}>
-                <div className={'container-fluid py-5'}>
+        <Container fluid>
+            <Row className={'bg-dark rounded-3'}>
+                <Col>
                     <h1 className={'display-5 fw-bold'}>Note Quiz</h1>
+                </Col>
+            </Row>
+            <Row className={'bg-dark rounded-5'}>
+                <Col>
                     <Quiz/>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </Container>
     );
 
@@ -38,17 +44,30 @@ function Quiz() {
     };
 
     let content = (questions.length > 0)
-        ? <div>{questions[currentQuestion]}</div>
-        : <Card body className={'position-relative'} style={{ width: '18rem', height: '8rem' }}>
-            <Button className={'position-absolute top-50 start-50 translate-middle'}
-                    style={{ width: '17rem', height: '7rem' }}
-                    onClick={loadQuestions}>
-                Get Questions
-            </Button>
-          </Card>;
+        ? <Row><div>{questions[currentQuestion]}</div></Row>
+        : <Row>
+            <Card body className={'position-relative'} style={{ width: '18rem', height: '8rem' }}>
+              <Button className={'position-absolute top-50 start-50 translate-middle'}
+                      style={{ width: '17rem', height: '7rem' }}
+                      onClick={loadQuestions}>
+                  Get Questions
+              </Button>
+            </Card>
+          </Row>
+        ;
 
     return (
-        <>{content}</>
+        <>
+            {content}
+            <Row className={'d-flex'}>
+                <Col className={''}>
+                    <Button onClick={() => setCurrentQuestion(Math.max(currentQuestion - 1, 0))}>Prev</Button>
+                </Col>
+                <Col className={'ml-auto'}>
+                    <Button onClick={() => setCurrentQuestion(Math.min(currentQuestion + 1, questions.length - 1))}>Next</Button>
+                </Col>
+            </Row>
+        </>
     );
 
 }

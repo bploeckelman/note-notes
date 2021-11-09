@@ -1,6 +1,6 @@
 import superagent from 'superagent';
 
-const host = 'http://localhost:8080';
+const host = 'http://localhost:8888';
 const root = host + '/api';
 
 export default {
